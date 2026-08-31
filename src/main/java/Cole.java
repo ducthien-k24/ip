@@ -55,13 +55,54 @@ public class Cole {
                 System.out.println("  " + task);
                 System.out.println(line);
 
-            } else {
-                Task task = new Task(input);
+            } else if (input.startsWith("todo ")) {
+                String description = input.substring(5);
+
+                Task task = new Todo(description);
                 tasks[taskCount] = task;
                 taskCount++;
 
                 System.out.println(line);
-                System.out.println("added: " + task);
+                System.out.println("Got it. I've added this task:");
+                System.out.println("  " + task);
+                System.out.println("Now you have " + taskCount + " tasks in the list.");
+                System.out.println(line);
+
+            } else if (input.startsWith("deadline ")) {
+                String content = input.substring(9);
+                String[] parts = content.split(" /by ", 2);
+
+                String description = parts[0];
+                String by = parts[1];
+
+                Task task = new Deadline(description, by);
+                tasks[taskCount] = task;
+                taskCount++;
+
+                System.out.println(line);
+                System.out.println("Got it. I've added this task:");
+                System.out.println("  " + task);
+                System.out.println("Now you have " + taskCount + " tasks in the list.");
+                System.out.println(line);
+
+            } else if (input.startsWith("event ")) {
+                String content = input.substring(6);
+
+                String[] fromParts = content.split(" /from ", 2);
+                String description = fromParts[0];
+
+                String[] toParts = fromParts[1].split(" /to ", 2);
+                String from = toParts[0];
+                String to = toParts[1];
+
+                Task task = new Event(description, from, to);
+                tasks[taskCount] = task;
+                taskCount++;
+
+                System.out.println(line);
+                System.out.println("Got it. I've added this task:");
+                System.out.println("  " + task);
+                System.out.println("Now you have " + taskCount + " tasks in the list.");
                 System.out.println(line);
             }
         }
