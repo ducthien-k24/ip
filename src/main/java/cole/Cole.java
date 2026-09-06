@@ -1,3 +1,5 @@
+package cole;
+
 import java.util.Scanner;
 
 public class Cole {

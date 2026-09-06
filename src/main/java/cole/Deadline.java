@@ -1,3 +1,5 @@
+package cole;
+
 public class Deadline extends Task {
 
     private String by;
