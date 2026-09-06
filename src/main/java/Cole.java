@@ -67,29 +67,72 @@ public class Cole {
                 }
             }
 
-            else if (input.startsWith("todo ")) {
-                addTask(new ToDo(input.substring(5)));
+            else if (input.startsWith("todo ") || input.equals("todo")) {
+                try {
+                    String description = input.length() > 4 ? input.substring(4).trim() : "";
+                    requireNonEmpty(description, "OOPS!!! You forgot to tell me what the todo is about!");
+                    addTask(new ToDo(description));
+                } catch (ColeException e) {
+                    printError(e);
+                }
+            }
+
+            else if (input.startsWith("deadline ") || input.equals("deadline")){
+
+                try {
+                    String content = input.length() > 9 ? input.substring(9) : "";
+                    String[] deadlineParts = content.split(" /by ", 2);
+
+                    if (deadlineParts.length < 2) {
+                        throw new ColeException("OOPS!!! Please specify the deadline using /by, e.g. \"deadline return book /by Sunday\".");
+                    }
+
+                    String description = deadlineParts[0];
+                    String by = deadlineParts[1];
+
+                    requireNonEmpty(description, "OOPS!!! What's the deadline for? Please add a description.");
+                    requireNonEmpty(by, "OOPS!!! What's the time for the deadline? Please add a specific time.");
+
+                    addTask(new Deadline(description, by));
+                } catch (ColeException e) {
+                    printError(e);
+                }
 
             }
 
-            else if (input.startsWith("deadline ")){
-                String[] deadlineParts = input.substring(9).split(" /by ", 2);
-                String description = deadlineParts[0];
-                String by = deadlineParts[1];
+            else if (input.startsWith("event ") || input.equals("event")){
 
-                addTask(new Deadline(description, by));
+                try {
+                    String content = input.length() > 5 ? input.substring(5) : "";
+                    requireNonEmpty(content, "OOPS!!! Umm... what's the event? You didn't give me a description.");
+                    String[] eventParts = content.split(" /from ", 2);
 
+                    if (eventParts.length < 2) {
+                        throw new ColeException("OOPS!!! Please specify the event time using /from and /to, e.g. \"event meeting /from Mon 2pm /to 4pm\".");
+                    }
+
+                    String description = eventParts[0].trim();
+                    requireNonEmpty(description, "OOPS!!! Umm... what's the event? You didn't give me a description.");
+
+                    String[] fromTo = eventParts[1].split(" /to ", 2);
+                    if (fromTo.length < 2) {
+                        throw new ColeException("OOPS!!! Please specify the event time using /from and /to, e.g. \"event meeting /from Mon 2pm /to 4pm\".");
+                    }
+
+                    String from = fromTo[0].trim();
+                    String to = fromTo[1].trim();
+                    requireNonEmpty(from, "OOPS!!! Please specify the event time using /from and /to, e.g. \"event meeting /from Mon 2pm /to 4pm\".");
+                    requireNonEmpty(to, "OOPS!!! Please specify the event time using /from and /to, e.g. \"event meeting /from Mon 2pm /to 4pm\".");
+
+                    addTask(new Event(description, from, to));
+
+                } catch (ColeException e){
+                    printError(e);
+                }
             }
 
-            else if (input.startsWith("event ")){
-                String[] eventParts = input.substring(6).split(" /from ", 2);
-                String description = eventParts[0];
-
-                String[] fromTo = eventParts[1].split(" /to ", 2);
-                String from = fromTo[0];
-                String to = fromTo[1];
-
-                addTask(new Event(description, from, to));
+            else {
+                printError(new ColeException("OOPS !!! I have no idea what that command means, sorry !"));
             }
         }
         scanner.close();
@@ -128,7 +171,19 @@ public class Cole {
             System.out.println(divider);
         }
 
-
     }
+
+    public static void printError(ColeException e) {
+        System.out.println(divider);
+        System.out.println(e.getMessage());
+        System.out.println(divider);
+    }
+
+    private static void requireNonEmpty(String value, String errorMessage) throws ColeException {
+        if (value.trim().isEmpty()) {
+            throw new ColeException(errorMessage);
+        }
+    }
+
 
 }
