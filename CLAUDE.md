@@ -75,11 +75,13 @@ Javadoc should explain purpose and behavior rather than merely restating the cod
 Example:
 
 ~~~java
+import cole.Task;
+
 /**
  * Represents a task with a deadline.
  */
 public class Deadline extends Task {
-    // ...
+  // ...
 }
 ~~~
 
