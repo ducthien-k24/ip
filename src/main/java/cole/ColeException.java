@@ -1,8 +1,8 @@
 package cole;
 
-public class ColeException  extends  Exception{
+public class ColeException extends Exception{
 
-    public ColeException(String message){
+    public ColeException(String message) {
         super(message);
     }
 
