@@ -10,25 +10,21 @@ public class Task {
         this.isDone = false;
     }
 
-    public String markedSymbol() {
+    public String getStatusIcon() {
         return isDone ? "X" : " ";
     }
 
-    public void markAction() {
+    public void markAsDone() {
         this.isDone = true;
-        System.out.println("Nice! I've marked this task as done:");
-        System.out.println(" " + this);
     }
 
-    public void unmarkAction() {
+    public void markAsNotDone() {
         this.isDone = false;
-        System.out.println("OK, I've marked this task as not done yet:");
-        System.out.println(" " + this);
     }
 
     @Override
     public String toString() {
-        return "[" + markedSymbol() + "] " + description;
+        return "[" + getStatusIcon() + "] " + description;
     }
 
 }
