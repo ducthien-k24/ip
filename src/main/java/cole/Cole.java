@@ -5,7 +5,13 @@ import java.util.Scanner;
 public class Cole {
 
     public static final String DIVIDER = "_____________________________________________________________\n";
-    public static Task[] actions = new Task[100];
+
+    private static final int MAX_TASKS = 100;
+    private static final String COMMAND_TODO = "todo";
+    private static final String COMMAND_DEADLINE = "deadline";
+    private static final String COMMAND_EVENT = "event";
+
+    public static Task[] actions = new Task[MAX_TASKS];
     public static int taskCounts = 0;
     public static void main(String[] args) {
 
@@ -61,25 +67,27 @@ public class Cole {
                     System.out.println("OOPS!!! That task number doesn't exist.");
                     System.out.println(DIVIDER);
                 }
-            } else if (input.startsWith("todo ") || input.equals("todo")) {
+            } else if (input.startsWith(COMMAND_TODO + " ") || input.equals(COMMAND_TODO)) {
                 try {
-                    String description = input.length() > 4 ? input.substring(4).trim() : "";
+                    String description = input.length() > COMMAND_TODO.length()
+                            ? input.substring(COMMAND_TODO.length()).trim() : "";
                     requireNonEmpty(description, "OOPS!!! You forgot to tell me what the todo is about!");
                     addTask(new ToDo(description));
                 } catch (ColeException e) {
                     printError(e);
                 }
-            } else if (input.startsWith("deadline ") || input.equals("deadline")) {
+            } else if (input.startsWith(COMMAND_DEADLINE + " ") || input.equals(COMMAND_DEADLINE)) {
 
                 try {
-                    String content = input.length() > 9 ? input.substring(9) : "";
+                    String content = input.length() > COMMAND_DEADLINE.length()
+                            ? input.substring(COMMAND_DEADLINE.length()) : "";
                     String[] deadlineParts = content.split(" /by ", 2);
 
                     if (deadlineParts.length < 2) {
                         throw new ColeException("OOPS!!! Please specify the deadline using /by, e.g. \"deadline return book /by Sunday\".");
                     }
 
-                    String description = deadlineParts[0];
+                    String description = deadlineParts[0].trim();
                     String by = deadlineParts[1];
 
                     requireNonEmpty(description, "OOPS!!! What's the deadline for? Please add a description.");
@@ -90,10 +98,11 @@ public class Cole {
                     printError(e);
                 }
 
-            } else if (input.startsWith("event ") || input.equals("event")) {
+            } else if (input.startsWith(COMMAND_EVENT + " ") || input.equals(COMMAND_EVENT)) {
 
                 try {
-                    String content = input.length() > 5 ? input.substring(5) : "";
+                    String content = input.length() > COMMAND_EVENT.length()
+                            ? input.substring(COMMAND_EVENT.length()) : "";
                     requireNonEmpty(content, "OOPS!!! Umm... what's the event? You didn't give me a description.");
                     String[] eventParts = content.split(" /from ", 2);
 
