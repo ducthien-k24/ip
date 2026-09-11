@@ -11,6 +11,13 @@ public class Cole {
     private static final String COMMAND_DEADLINE = "deadline";
     private static final String COMMAND_EVENT = "event";
 
+    private static final String ERROR_EVENT_TIME =
+            "OOPS!!! Please specify the event time using /from and /to, e.g. \"event meeting /from Mon 2pm /to 4pm\".";
+    private static final String ERROR_EVENT_DESCRIPTION =
+            "OOPS!!! Umm... what's the event? You didn't give me a description.";
+    private static final String ERROR_TASK_NOT_FOUND =
+            "OOPS!!! That task number doesn't exist.";
+
     public static Task[] tasks = new Task[MAX_TASKS];
     public static int taskCount = 0;
     public static void main(String[] args) {
@@ -23,9 +30,7 @@ public class Cole {
             String input = scanner.nextLine();
 
             if (input.equalsIgnoreCase("bye")) {
-                System.out.println(DIVIDER);
-                System.out.println("Bye. Hope to see you again soon!");
-                System.out.println(DIVIDER);
+                printFramed("Bye. Hope to see you again soon!");
                 break;
             } else if (input.equalsIgnoreCase("list")) {
                 System.out.println(DIVIDER);
@@ -41,35 +46,24 @@ public class Cole {
 
                 System.out.println(DIVIDER);
             } else if (input.startsWith("mark ")) {
-                System.out.println(DIVIDER);
                 try {
                     int index = Integer.parseInt(input.split(" ")[1]) - 1;
                     tasks[index].markAsDone();
-                    System.out.println("Nice! I've marked this task as done:");
-                    System.out.println(" " + tasks[index]);
-                    System.out.println(DIVIDER);
+                    printFramed("Nice! I've marked this task as done:", " " + tasks[index]);
                 } catch (NumberFormatException e) {
-                    System.out.println("OOPS!!! Please provide a valid task number, e.g. \"mark 2\".");
-                    System.out.println(DIVIDER);
+                    printFramed("OOPS!!! Please provide a valid task number, e.g. \"mark 2\".");
                 } catch (ArrayIndexOutOfBoundsException | NullPointerException e) {
-                    System.out.println("OOPS!!! That task number doesn't exist.");
-                    System.out.println(DIVIDER);
+                    printFramed(ERROR_TASK_NOT_FOUND);
                 }
             } else if (input.startsWith("unmark ")) {
-                System.out.println(DIVIDER);
-
                 try {
                     int index = Integer.parseInt(input.split(" ")[1]) - 1;
                     tasks[index].markAsNotDone();
-                    System.out.println("OK, I've marked this task as not done yet:");
-                    System.out.println(" " + tasks[index]);
-                    System.out.println(DIVIDER);
+                    printFramed("OK, I've marked this task as not done yet:", " " + tasks[index]);
                 } catch (NumberFormatException e) {
-                    System.out.println("OOPS!!! Please provide a valid task number, e.g. \"unmark 2\".");
-                    System.out.println(DIVIDER);
+                    printFramed("OOPS!!! Please provide a valid task number, e.g. \"unmark 2\".");
                 } catch (ArrayIndexOutOfBoundsException | NullPointerException e) {
-                    System.out.println("OOPS!!! That task number doesn't exist.");
-                    System.out.println(DIVIDER);
+                    printFramed(ERROR_TASK_NOT_FOUND);
                 }
             } else if (input.startsWith(COMMAND_TODO + " ") || input.equals(COMMAND_TODO)) {
                 try {
@@ -107,25 +101,25 @@ public class Cole {
                 try {
                     String content = input.length() > COMMAND_EVENT.length()
                             ? input.substring(COMMAND_EVENT.length()) : "";
-                    requireNonEmpty(content, "OOPS!!! Umm... what's the event? You didn't give me a description.");
+                    requireNonEmpty(content, ERROR_EVENT_DESCRIPTION);
                     String[] eventParts = content.split(" /from ", 2);
 
                     if (eventParts.length < 2) {
-                        throw new ColeException("OOPS!!! Please specify the event time using /from and /to, e.g. \"event meeting /from Mon 2pm /to 4pm\".");
+                        throw new ColeException(ERROR_EVENT_TIME);
                     }
 
                     String description = eventParts[0].trim();
-                    requireNonEmpty(description, "OOPS!!! Umm... what's the event? You didn't give me a description.");
+                    requireNonEmpty(description, ERROR_EVENT_DESCRIPTION);
 
                     String[] fromTo = eventParts[1].split(" /to ", 2);
                     if (fromTo.length < 2) {
-                        throw new ColeException("OOPS!!! Please specify the event time using /from and /to, e.g. \"event meeting /from Mon 2pm /to 4pm\".");
+                        throw new ColeException(ERROR_EVENT_TIME);
                     }
 
                     String from = fromTo[0].trim();
                     String to = fromTo[1].trim();
-                    requireNonEmpty(from, "OOPS!!! Please specify the event time using /from and /to, e.g. \"event meeting /from Mon 2pm /to 4pm\".");
-                    requireNonEmpty(to, "OOPS!!! Please specify the event time using /from and /to, e.g. \"event meeting /from Mon 2pm /to 4pm\".");
+                    requireNonEmpty(from, ERROR_EVENT_TIME);
+                    requireNonEmpty(to, ERROR_EVENT_TIME);
 
                     addTask(new Event(description, from, to));
 
@@ -160,23 +154,25 @@ public class Cole {
             tasks[taskCount] = newTask;
             taskCount++;
 
-            System.out.println(DIVIDER);
-            System.out.println("Got it. I've added this task:");
-            System.out.println(" " + newTask);
-            System.out.println("Now you have " + taskCount + " tasks in the list.");
-            System.out.println(DIVIDER);
+            printFramed("Got it. I've added this task:",
+                    " " + newTask,
+                    "Now you have " + taskCount + " tasks in the list.");
 
         } catch (ArrayIndexOutOfBoundsException e) {
-            System.out.println(DIVIDER);
-            System.out.println("OOPS!!! The task list is full, I can't add any more tasks.");
-            System.out.println(DIVIDER);
+            printFramed("OOPS!!! The task list is full, I can't add any more tasks.");
         }
 
     }
 
     public static void printError(ColeException e) {
+        printFramed(e.getMessage());
+    }
+
+    private static void printFramed(String... lines) {
         System.out.println(DIVIDER);
-        System.out.println(e.getMessage());
+        for (String line : lines) {
+            System.out.println(line);
+        }
         System.out.println(DIVIDER);
     }
 
