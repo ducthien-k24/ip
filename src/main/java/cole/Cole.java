@@ -11,8 +11,8 @@ public class Cole {
     private static final String COMMAND_DEADLINE = "deadline";
     private static final String COMMAND_EVENT = "event";
 
-    public static Task[] actions = new Task[MAX_TASKS];
-    public static int taskCounts = 0;
+    public static Task[] tasks = new Task[MAX_TASKS];
+    public static int taskCount = 0;
     public static void main(String[] args) {
 
         Scanner scanner = new Scanner(System.in);
@@ -31,11 +31,11 @@ public class Cole {
                 System.out.println(DIVIDER);
                 System.out.println("Here are the tasks in your list:");
 
-                if (taskCounts == 0) {
+                if (taskCount == 0) {
                     System.out.println("There is no task now!");
                 } else {
-                    for (int i = 0; i < taskCounts; i++) {
-                        System.out.println((i + 1) + ". " + actions[i]);
+                    for (int i = 0; i < taskCount; i++) {
+                        System.out.println((i + 1) + ". " + tasks[i]);
                     }
                 }
 
@@ -44,7 +44,7 @@ public class Cole {
                 System.out.println(DIVIDER);
                 try {
                     int index = Integer.parseInt(input.split(" ")[1]) - 1;
-                    actions[index].markAction();
+                    tasks[index].markAsDone();
                     System.out.println(DIVIDER);
                 } catch (NumberFormatException e) {
                     System.out.println("OOPS!!! Please provide a valid task number, e.g. \"mark 2\".");
@@ -58,7 +58,7 @@ public class Cole {
 
                 try {
                     int index = Integer.parseInt(input.split(" ")[1]) - 1;
-                    actions[index].unmarkAction();
+                    tasks[index].markAsNotDone();
                     System.out.println(DIVIDER);
                 } catch (NumberFormatException e) {
                     System.out.println("OOPS!!! Please provide a valid task number, e.g. \"unmark 2\".");
@@ -153,13 +153,13 @@ public class Cole {
     public static void addTask(Task newTask) {
 
         try {
-            actions[taskCounts] = newTask;
-            taskCounts++;
+            tasks[taskCount] = newTask;
+            taskCount++;
 
             System.out.println(DIVIDER);
             System.out.println("Got it. I've added this task:");
             System.out.println(" " + newTask);
-            System.out.println("Now you have " + taskCounts + " tasks in the list.");
+            System.out.println("Now you have " + taskCount + " tasks in the list.");
             System.out.println(DIVIDER);
 
         } catch (ArrayIndexOutOfBoundsException e) {
