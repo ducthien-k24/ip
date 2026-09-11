@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class Cole {
 
-    public static final String DIVIDER = "_____________________________________________________________\n";
+    private static final String DIVIDER = "_____________________________________________________________\n";
 
     private static final int MAX_TASKS = 100;
     private static final String COMMAND_TODO = "todo";
@@ -18,8 +18,8 @@ public class Cole {
     private static final String ERROR_TASK_NOT_FOUND =
             "OOPS!!! That task number doesn't exist.";
 
-    public static Task[] tasks = new Task[MAX_TASKS];
-    public static int taskCount = 0;
+    private static Task[] tasks = new Task[MAX_TASKS];
+    private static int taskCount = 0;
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
@@ -150,7 +150,7 @@ public class Cole {
         }
     }
 
-    public static void printGreetings() {
+    private static void printGreetings() {
         System.out.println(DIVIDER);
 
         System.out.println("  ____      _      \n"
@@ -164,7 +164,7 @@ public class Cole {
         System.out.println(DIVIDER);
     }
 
-    public static void addTask(Task newTask) {
+    private static void addTask(Task newTask) {
         if (taskCount == MAX_TASKS) {
             printFramed("OOPS!!! The task list is full, I can't add any more tasks.");
             return;
@@ -178,7 +178,7 @@ public class Cole {
                 "Now you have " + taskCount + " tasks in the list.");
     }
 
-    public static void printError(ColeException e) {
+    private static void printError(ColeException e) {
         printFramed(e.getMessage());
     }
 
