@@ -45,6 +45,8 @@ public class Cole {
                 try {
                     int index = Integer.parseInt(input.split(" ")[1]) - 1;
                     tasks[index].markAsDone();
+                    System.out.println("Nice! I've marked this task as done:");
+                    System.out.println(" " + tasks[index]);
                     System.out.println(DIVIDER);
                 } catch (NumberFormatException e) {
                     System.out.println("OOPS!!! Please provide a valid task number, e.g. \"mark 2\".");
@@ -59,6 +61,8 @@ public class Cole {
                 try {
                     int index = Integer.parseInt(input.split(" ")[1]) - 1;
                     tasks[index].markAsNotDone();
+                    System.out.println("OK, I've marked this task as not done yet:");
+                    System.out.println(" " + tasks[index]);
                     System.out.println(DIVIDER);
                 } catch (NumberFormatException e) {
                     System.out.println("OOPS!!! Please provide a valid task number, e.g. \"unmark 2\".");
