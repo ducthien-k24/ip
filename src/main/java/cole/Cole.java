@@ -149,19 +149,17 @@ public class Cole {
     }
 
     public static void addTask(Task newTask) {
-
-        try {
-            tasks[taskCount] = newTask;
-            taskCount++;
-
-            printFramed("Got it. I've added this task:",
-                    " " + newTask,
-                    "Now you have " + taskCount + " tasks in the list.");
-
-        } catch (ArrayIndexOutOfBoundsException e) {
+        if (taskCount == MAX_TASKS) {
             printFramed("OOPS!!! The task list is full, I can't add any more tasks.");
+            return;
         }
 
+        tasks[taskCount] = newTask;
+        taskCount++;
+
+        printFramed("Got it. I've added this task:",
+                " " + newTask,
+                "Now you have " + taskCount + " tasks in the list.");
     }
 
     public static void printError(ColeException e) {
