@@ -37,6 +37,8 @@ public class Cole {
                 markTask(input, true);
             } else if (input.startsWith("unmark ")) {
                 markTask(input, false);
+            } else if (input.startsWith("delete ")) {
+                deleteTask(input);
             } else if (isCommand(input, COMMAND_TODO)) {
                 addTodo(input);
             } else if (isCommand(input, COMMAND_DEADLINE)) {
@@ -86,7 +88,21 @@ public class Cole {
                 printFramed("OK, I've marked this task as not done yet:", " " + task);
             }
         } catch (NumberFormatException e) {
-            printFramed("OOPS!!! Please provide a valid task number, e.g. \"" + command + " 2\".");
+            printFramed(invalidTaskNumberMessage(command));
+        } catch (IndexOutOfBoundsException e) {
+            printFramed(ERROR_TASK_NOT_FOUND);
+        }
+    }
+
+    private static void deleteTask(String input) {
+        try {
+            int index = Integer.parseInt(input.split(" ")[1]) - 1;
+            Task removedTask = tasks.remove(index);
+            printFramed("Noted. I've removed this task:",
+                    " " + removedTask,
+                    "Now you have " + tasks.size() + " tasks in the list.");
+        } catch (NumberFormatException e) {
+            printFramed(invalidTaskNumberMessage("delete"));
         } catch (IndexOutOfBoundsException e) {
             printFramed(ERROR_TASK_NOT_FOUND);
         }
@@ -173,6 +189,10 @@ public class Cole {
                 "Now you have " + tasks.size() + " tasks in the list.");
     }
 
+    private static String invalidTaskNumberMessage(String command) {
+        return "OOPS!!! Please provide a valid task number, e.g. \"" + command + " 2\".";
+    }
+
     private static void printError(ColeException e) {
         printFramed(e.getMessage());
     }
@@ -190,6 +210,5 @@ public class Cole {
             throw new ColeException(errorMessage);
         }
     }
-
 
 }
