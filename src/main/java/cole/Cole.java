@@ -20,8 +20,11 @@ public class Cole {
 
     private static ArrayList<Task> tasks = new ArrayList<>();
 
+    private static final Storage storage = new Storage("./data/cole.txt");
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+        tasks = storage.load();
 
         printGreetings();
 
@@ -82,9 +85,11 @@ public class Cole {
             Task task = tasks.get(index);
             if (isDone) {
                 task.markAsDone();
+                storage.save(tasks);
                 printFramed("Nice! I've marked this task as done:", " " + task);
             } else {
                 task.markAsNotDone();
+                storage.save(tasks);
                 printFramed("OK, I've marked this task as not done yet:", " " + task);
             }
         } catch (NumberFormatException e) {
@@ -98,6 +103,7 @@ public class Cole {
         try {
             int index = Integer.parseInt(input.split(" ")[1]) - 1;
             Task removedTask = tasks.remove(index);
+            storage.save(tasks);
             printFramed("Noted. I've removed this task:",
                     " " + removedTask,
                     "Now you have " + tasks.size() + " tasks in the list.");
@@ -183,6 +189,7 @@ public class Cole {
 
     private static void addTask(Task newTask) {
         tasks.add(newTask);
+        storage.save(tasks);
 
         printFramed("Got it. I've added this task:",
                 " " + newTask,
@@ -192,6 +199,8 @@ public class Cole {
     private static String invalidTaskNumberMessage(String command) {
         return "OOPS!!! Please provide a valid task number, e.g. \"" + command + " 2\".";
     }
+
+
 
     private static void printError(ColeException e) {
         printFramed(e.getMessage());
@@ -210,5 +219,6 @@ public class Cole {
             throw new ColeException(errorMessage);
         }
     }
+
 
 }
