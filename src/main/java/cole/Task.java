@@ -27,4 +27,15 @@ public class Task {
         return "[" + getStatusIcon() + "] " + description;
     }
 
+    public String getDescription(){
+        return description;
+    }
+
+    public boolean isDone(){
+        return isDone;
+    }
+
+    public String toSaveFormat(){
+        return (isDone ? "1" : "0") + " | " + description;
+    }
 }

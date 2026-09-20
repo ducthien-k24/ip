@@ -1,6 +1,7 @@
 package cole;
 
 import java.util.Scanner;
+import java.util.ArrayList;
 
 public class Cole {
 
@@ -20,8 +21,12 @@ public class Cole {
 
     private static Task[] tasks = new Task[MAX_TASKS];
     private static int taskCount = 0;
+
+    private static final Storage storage = new Storage("./data/cole.txt");
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+        loadTasks();
 
         printGreetings();
 
@@ -79,9 +84,11 @@ public class Cole {
             int index = Integer.parseInt(input.split(" ")[1]) - 1;
             if (isDone) {
                 tasks[index].markAsDone();
+                saveTasks();
                 printFramed("Nice! I've marked this task as done:", " " + tasks[index]);
             } else {
                 tasks[index].markAsNotDone();
+                saveTasks();
                 printFramed("OK, I've marked this task as not done yet:", " " + tasks[index]);
             }
         } catch (NumberFormatException e) {
@@ -172,10 +179,29 @@ public class Cole {
 
         tasks[taskCount] = newTask;
         taskCount++;
+        saveTasks();
 
         printFramed("Got it. I've added this task:",
                 " " + newTask,
                 "Now you have " + taskCount + " tasks in the list.");
+    }
+
+    private static void loadTasks() {
+        ArrayList<Task> loadedTasks = storage.load();
+        for (Task task : loadedTasks) {
+            if (taskCount < MAX_TASKS) {
+                tasks[taskCount] = task;
+                taskCount++;
+            }
+        }
+    }
+
+    private static void saveTasks() {
+        ArrayList<Task> currentTasks = new ArrayList<>();
+        for (int i = 0; i < taskCount; i++) {
+            currentTasks.add(tasks[i]);
+        }
+        storage.save(currentTasks);
     }
 
     private static void printError(ColeException e) {
