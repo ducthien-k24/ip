@@ -20,3 +20,6 @@ _temp/
 text-ui-test/EXPECTED-UNIX.TXT
 
 notes.txt
+
+/data
+/cole.jar
