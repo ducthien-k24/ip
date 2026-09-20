@@ -1,12 +1,12 @@
 package cole;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Cole {
 
     private static final String DIVIDER = "_____________________________________________________________\n";
 
-    private static final int MAX_TASKS = 100;
     private static final String COMMAND_TODO = "todo";
     private static final String COMMAND_DEADLINE = "deadline";
     private static final String COMMAND_EVENT = "event";
@@ -18,8 +18,8 @@ public class Cole {
     private static final String ERROR_TASK_NOT_FOUND =
             "OOPS!!! That task number doesn't exist.";
 
-    private static Task[] tasks = new Task[MAX_TASKS];
-    private static int taskCount = 0;
+    private static ArrayList<Task> tasks = new ArrayList<>();
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
@@ -37,6 +37,8 @@ public class Cole {
                 markTask(input, true);
             } else if (input.startsWith("unmark ")) {
                 markTask(input, false);
+            } else if (input.startsWith("delete ")) {
+                deleteTask(input);
             } else if (isCommand(input, COMMAND_TODO)) {
                 addTodo(input);
             } else if (isCommand(input, COMMAND_DEADLINE)) {
@@ -62,11 +64,11 @@ public class Cole {
         System.out.println(DIVIDER);
         System.out.println("Here are the tasks in your list:");
 
-        if (taskCount == 0) {
+        if (tasks.isEmpty()) {
             System.out.println("There is no task now!");
         } else {
-            for (int i = 0; i < taskCount; i++) {
-                System.out.println((i + 1) + ". " + tasks[i]);
+            for (int i = 0; i < tasks.size(); i++) {
+                System.out.println((i + 1) + ". " + tasks.get(i));
             }
         }
 
@@ -77,16 +79,31 @@ public class Cole {
         String command = isDone ? "mark" : "unmark";
         try {
             int index = Integer.parseInt(input.split(" ")[1]) - 1;
+            Task task = tasks.get(index);
             if (isDone) {
-                tasks[index].markAsDone();
-                printFramed("Nice! I've marked this task as done:", " " + tasks[index]);
+                task.markAsDone();
+                printFramed("Nice! I've marked this task as done:", " " + task);
             } else {
-                tasks[index].markAsNotDone();
-                printFramed("OK, I've marked this task as not done yet:", " " + tasks[index]);
+                task.markAsNotDone();
+                printFramed("OK, I've marked this task as not done yet:", " " + task);
             }
         } catch (NumberFormatException e) {
-            printFramed("OOPS!!! Please provide a valid task number, e.g. \"" + command + " 2\".");
-        } catch (ArrayIndexOutOfBoundsException | NullPointerException e) {
+            printFramed(invalidTaskNumberMessage(command));
+        } catch (IndexOutOfBoundsException e) {
+            printFramed(ERROR_TASK_NOT_FOUND);
+        }
+    }
+
+    private static void deleteTask(String input) {
+        try {
+            int index = Integer.parseInt(input.split(" ")[1]) - 1;
+            Task removedTask = tasks.remove(index);
+            printFramed("Noted. I've removed this task:",
+                    " " + removedTask,
+                    "Now you have " + tasks.size() + " tasks in the list.");
+        } catch (NumberFormatException e) {
+            printFramed(invalidTaskNumberMessage("delete"));
+        } catch (IndexOutOfBoundsException e) {
             printFramed(ERROR_TASK_NOT_FOUND);
         }
     }
@@ -165,17 +182,15 @@ public class Cole {
     }
 
     private static void addTask(Task newTask) {
-        if (taskCount == MAX_TASKS) {
-            printFramed("OOPS!!! The task list is full, I can't add any more tasks.");
-            return;
-        }
-
-        tasks[taskCount] = newTask;
-        taskCount++;
+        tasks.add(newTask);
 
         printFramed("Got it. I've added this task:",
                 " " + newTask,
-                "Now you have " + taskCount + " tasks in the list.");
+                "Now you have " + tasks.size() + " tasks in the list.");
+    }
+
+    private static String invalidTaskNumberMessage(String command) {
+        return "OOPS!!! Please provide a valid task number, e.g. \"" + command + " 2\".";
     }
 
     private static void printError(ColeException e) {
@@ -195,6 +210,5 @@ public class Cole {
             throw new ColeException(errorMessage);
         }
     }
-
 
 }
