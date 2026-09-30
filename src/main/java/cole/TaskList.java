@@ -1,0 +1,65 @@
+package cole;
+
+import java.util.ArrayList;
+
+/**
+ * Stores the user's tasks and provides operations to add, remove and access them.
+ */
+public class TaskList {
+    private final ArrayList<Task> tasks;
+
+    /**
+     * Creates an empty task list.
+     */
+    public TaskList() {
+        this.tasks = new ArrayList<Task>();
+    }
+
+    /**
+     * Creates a task list containing the given tasks, e.g. those loaded from the data file.
+     *
+     * @param tasks the initial tasks
+     */
+    public TaskList(ArrayList<Task> tasks) {
+        this.tasks = tasks;
+    }
+
+    public void add(Task task) {
+        tasks.add(task);
+    }
+
+    /**
+     * Removes the task at the given position.
+     *
+     * @param index 0-based position of the task
+     * @return the task that was removed
+     * @throws IndexOutOfBoundsException if the index is not in the list
+     */
+    public Task delete(int index) {
+        return tasks.remove(index);
+    }
+
+    /**
+     * Returns the task at the given position without removing it.
+     *
+     * @param index 0-based position of the task
+     * @return the task at that position
+     * @throws IndexOutOfBoundsException if the index is not in the list
+     */
+    public Task get(int index) {
+        return tasks.get(index);
+    }
+
+    public int size() {
+        return tasks.size();
+    }
+
+    /**
+     * Returns the underlying list, for saving to file or displaying to the user.
+     *
+     * @return all tasks in their current order
+     */
+    public ArrayList<Task> getAll() {
+        return tasks;
+    }
+}

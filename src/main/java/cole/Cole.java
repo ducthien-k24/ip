@@ -1,7 +1,5 @@
 package cole;
 
-import java.util.ArrayList;
-
 public class Cole {
 
     private static final String COMMAND_TODO = "todo";
@@ -15,13 +13,13 @@ public class Cole {
     private static final String ERROR_TASK_NOT_FOUND =
             "OOPS!!! That task number doesn't exist.";
 
-    private static ArrayList<Task> tasks = new ArrayList<>();
+    private static TaskList tasks;
 
     private static final Storage storage = new Storage("./data/cole.txt");
     private static final Ui ui = new Ui();
 
     public static void main(String[] args) {
-        tasks = storage.load();
+        tasks = new TaskList(storage.load());
 
         ui.showWelcome();
 
@@ -32,7 +30,7 @@ public class Cole {
                 ui.showMessages("Bye. Hope to see you again soon!");
                 break;
             } else if (input.equalsIgnoreCase("list")) {
-                ui.showTaskList(tasks);
+                ui.showTaskList(tasks.getAll());
             } else if (input.startsWith("mark ")) {
                 markTask(input, true);
             } else if (input.startsWith("unmark ")) {
@@ -67,11 +65,11 @@ public class Cole {
             Task task = tasks.get(index);
             if (isDone) {
                 task.markAsDone();
-                storage.save(tasks);
+                storage.save(tasks.getAll());
                 ui.showMessages("Nice! I've marked this task as done:", " " + task);
             } else {
                 task.markAsNotDone();
-                storage.save(tasks);
+                storage.save(tasks.getAll());
                 ui.showMessages("OK, I've marked this task as not done yet:", " " + task);
             }
         } catch (NumberFormatException e) {
@@ -84,8 +82,8 @@ public class Cole {
     private static void deleteTask(String input) {
         try {
             int index = Integer.parseInt(input.split(" ")[1]) - 1;
-            Task removedTask = tasks.remove(index);
-            storage.save(tasks);
+            Task removedTask = tasks.delete(index);
+            storage.save(tasks.getAll());
             ui.showMessages("Noted. I've removed this task:",
                     " " + removedTask,
                     "Now you have " + tasks.size() + " tasks in the list.");
@@ -157,7 +155,7 @@ public class Cole {
 
     private static void addTask(Task newTask) {
         tasks.add(newTask);
-        storage.save(tasks);
+        storage.save(tasks.getAll());
 
         ui.showMessages("Got it. I've added this task:",
                 " " + newTask,
