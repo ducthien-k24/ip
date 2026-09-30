@@ -1,18 +1,33 @@
 package cole;
 
+/**
+ * Entry point of the Cole chatbot. Owns the Ui, Storage and TaskList,
+ * and runs the loop that reads commands and executes them.
+ */
 public class Cole {
 
     private static final String ERROR_TASK_NOT_FOUND =
             "OOPS!!! That task number doesn't exist.";
 
-    private static TaskList tasks;
+    private final Storage storage;
+    private final TaskList tasks;
+    private final Ui ui;
 
-    private static final Storage storage = new Storage("./data/cole.txt");
-    private static final Ui ui = new Ui();
-
-    public static void main(String[] args) {
+    /**
+     * Creates a Cole chatbot that stores its tasks in the given file.
+     *
+     * @param filePath path of the data file used to load and save tasks
+     */
+    public Cole(String filePath) {
+        ui = new Ui();
+        storage = new Storage(filePath);
         tasks = new TaskList(storage.load());
+    }
 
+    /**
+     * Greets the user, then reads and executes commands until the user types "bye".
+     */
+    public void run() {
         ui.showWelcome();
 
         while (true) {
@@ -38,7 +53,11 @@ public class Cole {
         ui.close();
     }
 
-    private static void markTask(String input, boolean isDone) {
+    public static void main(String[] args) {
+        new Cole("./data/cole.txt").run();
+    }
+
+    private void markTask(String input, boolean isDone) {
         String command = isDone ? "mark" : "unmark";
         try {
             int index = Parser.parseTaskIndex(input);
@@ -59,7 +78,7 @@ public class Cole {
         }
     }
 
-    private static void deleteTask(String input) {
+    private void deleteTask(String input) {
         try {
             int index = Parser.parseTaskIndex(input);
             Task removedTask = tasks.delete(index);
@@ -74,7 +93,7 @@ public class Cole {
         }
     }
 
-    private static void addTask(String input) {
+    private void addTask(String input) {
         try {
             Task newTask = Parser.parseTask(input);
             tasks.add(newTask);
@@ -87,7 +106,7 @@ public class Cole {
         }
     }
 
-    private static String invalidTaskNumberMessage(String command) {
+    private String invalidTaskNumberMessage(String command) {
         return "OOPS!!! Please provide a valid task number, e.g. \"" + command + " 2\".";
     }
 }
