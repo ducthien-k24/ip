@@ -1,11 +1,8 @@
 package cole;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class Cole {
-
-    private static final String DIVIDER = "_____________________________________________________________\n";
 
     private static final String COMMAND_TODO = "todo";
     private static final String COMMAND_DEADLINE = "deadline";
@@ -21,21 +18,21 @@ public class Cole {
     private static ArrayList<Task> tasks = new ArrayList<>();
 
     private static final Storage storage = new Storage("./data/cole.txt");
+    private static final Ui ui = new Ui();
 
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
         tasks = storage.load();
 
-        printGreetings();
+        ui.showWelcome();
 
         while (true) {
-            String input = scanner.nextLine();
+            String input = ui.readCommand();
 
             if (input.equalsIgnoreCase("bye")) {
-                printFramed("Bye. Hope to see you again soon!");
+                ui.showMessages("Bye. Hope to see you again soon!");
                 break;
             } else if (input.equalsIgnoreCase("list")) {
-                listTasks();
+                ui.showTaskList(tasks);
             } else if (input.startsWith("mark ")) {
                 markTask(input, true);
             } else if (input.startsWith("unmark ")) {
@@ -49,10 +46,10 @@ public class Cole {
             } else if (isCommand(input, COMMAND_EVENT)) {
                 addEvent(input);
             } else {
-                printError(new ColeException("OOPS !!! I have no idea what that command means, sorry !"));
+                ui.showError("OOPS !!! I have no idea what that command means, sorry !");
             }
         }
-        scanner.close();
+        ui.close();
     }
 
     private static boolean isCommand(String input, String command) {
@@ -63,21 +60,6 @@ public class Cole {
         return input.length() > command.length() ? input.substring(command.length()) : "";
     }
 
-    private static void listTasks() {
-        System.out.println(DIVIDER);
-        System.out.println("Here are the tasks in your list:");
-
-        if (tasks.isEmpty()) {
-            System.out.println("There is no task now!");
-        } else {
-            for (int i = 0; i < tasks.size(); i++) {
-                System.out.println((i + 1) + ". " + tasks.get(i));
-            }
-        }
-
-        System.out.println(DIVIDER);
-    }
-
     private static void markTask(String input, boolean isDone) {
         String command = isDone ? "mark" : "unmark";
         try {
@@ -86,16 +68,16 @@ public class Cole {
             if (isDone) {
                 task.markAsDone();
                 storage.save(tasks);
-                printFramed("Nice! I've marked this task as done:", " " + task);
+                ui.showMessages("Nice! I've marked this task as done:", " " + task);
             } else {
                 task.markAsNotDone();
                 storage.save(tasks);
-                printFramed("OK, I've marked this task as not done yet:", " " + task);
+                ui.showMessages("OK, I've marked this task as not done yet:", " " + task);
             }
         } catch (NumberFormatException e) {
-            printFramed(invalidTaskNumberMessage(command));
+            ui.showMessages(invalidTaskNumberMessage(command));
         } catch (IndexOutOfBoundsException e) {
-            printFramed(ERROR_TASK_NOT_FOUND);
+            ui.showMessages(ERROR_TASK_NOT_FOUND);
         }
     }
 
@@ -104,13 +86,13 @@ public class Cole {
             int index = Integer.parseInt(input.split(" ")[1]) - 1;
             Task removedTask = tasks.remove(index);
             storage.save(tasks);
-            printFramed("Noted. I've removed this task:",
+            ui.showMessages("Noted. I've removed this task:",
                     " " + removedTask,
                     "Now you have " + tasks.size() + " tasks in the list.");
         } catch (NumberFormatException e) {
-            printFramed(invalidTaskNumberMessage("delete"));
+            ui.showMessages(invalidTaskNumberMessage("delete"));
         } catch (IndexOutOfBoundsException e) {
-            printFramed(ERROR_TASK_NOT_FOUND);
+            ui.showMessages(ERROR_TASK_NOT_FOUND);
         }
     }
 
@@ -120,7 +102,7 @@ public class Cole {
             requireNonEmpty(description, "OOPS!!! You forgot to tell me what the todo is about!");
             addTask(new ToDo(description));
         } catch (ColeException e) {
-            printError(e);
+            ui.showError(e.getMessage());
         }
     }
 
@@ -140,7 +122,7 @@ public class Cole {
 
             addTask(new Deadline(description, by));
         } catch (ColeException e) {
-            printError(e);
+            ui.showError(e.getMessage());
         }
     }
 
@@ -169,29 +151,15 @@ public class Cole {
 
             addTask(new Event(description, from, to));
         } catch (ColeException e) {
-            printError(e);
+            ui.showError(e.getMessage());
         }
-    }
-
-    private static void printGreetings() {
-        System.out.println(DIVIDER);
-
-        System.out.println("  ____      _      \n"
-                + " / ___|___ | | ___ \n"
-                + "| |   / _ \\| |/ _ \\\n"
-                + "| |__| (_) | |  __/\n"
-                + " \\____\\___/|_|\\___|\n");
-
-        System.out.println("Hello! I'm Cole.\n");
-        System.out.println("What can I do for you?");
-        System.out.println(DIVIDER);
     }
 
     private static void addTask(Task newTask) {
         tasks.add(newTask);
         storage.save(tasks);
 
-        printFramed("Got it. I've added this task:",
+        ui.showMessages("Got it. I've added this task:",
                 " " + newTask,
                 "Now you have " + tasks.size() + " tasks in the list.");
     }
@@ -201,24 +169,9 @@ public class Cole {
     }
 
 
-
-    private static void printError(ColeException e) {
-        printFramed(e.getMessage());
-    }
-
-    private static void printFramed(String... lines) {
-        System.out.println(DIVIDER);
-        for (String line : lines) {
-            System.out.println(line);
-        }
-        System.out.println(DIVIDER);
-    }
-
     private static void requireNonEmpty(String value, String errorMessage) throws ColeException {
         if (value.trim().isEmpty()) {
             throw new ColeException(errorMessage);
         }
     }
-
-
 }
