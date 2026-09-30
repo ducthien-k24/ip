@@ -8,6 +8,7 @@ public class Parser {
     private static final String COMMAND_TODO = "todo";
     private static final String COMMAND_DEADLINE = "deadline";
     private static final String COMMAND_EVENT = "event";
+    private static final String COMMAND_FIND = "find";
 
     private static final String ERROR_EVENT_TIME =
             "OOPS!!! Please specify the event time using /from and /to, e.g. \"event meeting /from Mon 2pm /to 4pm\".";
@@ -24,6 +25,29 @@ public class Parser {
         return isCommand(input, COMMAND_TODO)
                 || isCommand(input, COMMAND_DEADLINE)
                 || isCommand(input, COMMAND_EVENT);
+    }
+
+    /**
+     * Returns true if the input is a find command.
+     *
+     * @param input the full command typed by the user
+     * @return whether the input asks to search for tasks
+     */
+    public static boolean isFindCommand(String input) {
+        return isCommand(input, COMMAND_FIND);
+    }
+
+    /**
+     * Extracts the search keyword from a command like "find book".
+     *
+     * @param input the full command typed by the user
+     * @return the keyword, with surrounding spaces removed
+     * @throws ColeException if no keyword is given
+     */
+    public static String parseFindKeyword(String input) throws ColeException {
+        String keyword = argumentsOf(input, COMMAND_FIND).trim();
+        requireNonEmpty(keyword, "OOPS!!! What should I search for? e.g. \"find book\".");
+        return keyword;
     }
 
     /**

@@ -44,6 +44,8 @@ public class Cole {
                 markTask(input, false);
             } else if (input.startsWith("delete ")) {
                 deleteTask(input);
+            } else if (Parser.isFindCommand(input)) {
+                findTasks(input);
             } else if (Parser.isAddTaskCommand(input)) {
                 addTask(input);
             } else {
@@ -101,6 +103,15 @@ public class Cole {
             ui.showMessages("Got it. I've added this task:",
                     " " + newTask,
                     "Now you have " + tasks.size() + " tasks in the list.");
+        } catch (ColeException e) {
+            ui.showError(e.getMessage());
+        }
+    }
+
+    private void findTasks(String input) {
+        try {
+            String keyword = Parser.parseFindKeyword(input);
+            ui.showMatchingTasks(tasks.find(keyword));
         } catch (ColeException e) {
             ui.showError(e.getMessage());
         }
