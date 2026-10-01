@@ -81,6 +81,11 @@ public class Ui {
                 "No matching tasks found.");
     }
 
+    /**
+     * Prints a header followed by the tasks numbered from 1, all between dividers.
+     * Prints the empty message instead of the tasks if the list is empty.
+     * Shared by the list and find commands so both use the same layout.
+     */
     private void showNumberedTasks(String header, ArrayList<Task> tasks, String emptyMessage) {
         System.out.println(DIVIDER);
         System.out.println(header);

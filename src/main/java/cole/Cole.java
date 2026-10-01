@@ -55,10 +55,22 @@ public class Cole {
         ui.close();
     }
 
+    /**
+     * Starts Cole using the default data file.
+     *
+     * @param args not used
+     */
     public static void main(String[] args) {
         new Cole("./data/cole.txt").run();
     }
 
+    /**
+     * Marks or unmarks the task chosen by a "mark N" or "unmark N" command,
+     * saves the change and tells the user. Invalid task numbers are reported as errors.
+     *
+     * @param input the full command typed by the user
+     * @param isDone true for "mark", false for "unmark"
+     */
     private void markTask(String input, boolean isDone) {
         String command = isDone ? "mark" : "unmark";
         try {
@@ -80,6 +92,12 @@ public class Cole {
         }
     }
 
+    /**
+     * Removes the task chosen by a "delete N" command, saves the change and
+     * tells the user. Invalid task numbers are reported as errors.
+     *
+     * @param input the full command typed by the user
+     */
     private void deleteTask(String input) {
         try {
             int index = Parser.parseTaskIndex(input);
@@ -95,6 +113,12 @@ public class Cole {
         }
     }
 
+    /**
+     * Creates a task from a todo, deadline or event command, adds it to the list,
+     * saves the list and tells the user. Invalid input is reported as an error.
+     *
+     * @param input the full command typed by the user
+     */
     private void addTask(String input) {
         try {
             Task newTask = Parser.parseTask(input);
@@ -108,6 +132,12 @@ public class Cole {
         }
     }
 
+    /**
+     * Shows the tasks whose description contains the keyword of a "find" command.
+     * A missing keyword is reported as an error.
+     *
+     * @param input the full command typed by the user
+     */
     private void findTasks(String input) {
         try {
             String keyword = Parser.parseFindKeyword(input);

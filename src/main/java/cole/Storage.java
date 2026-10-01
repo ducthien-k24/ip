@@ -77,7 +77,11 @@ public class Storage {
 
     /**
      * Parses one line of the data file into a Task.
-     * Returns null if the line is corrupted, so the caller can skip it.
+     * Returns null if the line is corrupted (missing fields, unknown type or an
+     * invalid deadline date), so the caller can skip it instead of crashing.
+     *
+     * @param line one line of the data file, e.g. "D | 0 | return book | 2019-10-15"
+     * @return the task, or null if the line cannot be read
      */
     private Task parseTask(String line) {
         String[] parts = line.split(" \\| ");
