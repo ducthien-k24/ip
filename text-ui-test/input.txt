@@ -1,6 +1,6 @@
 list
 todo read book
-deadline return book /by Sunday
+deadline return book /by 2019-10-15
 event meeting /from Mon 2pm /to 4pm
 todo
 event
@@ -16,4 +16,6 @@ find book
 find BOOK
 find xyz
 find
+deadline pay bills /by Sunday
+deadline pay bills /by 2019-13-45
 bye

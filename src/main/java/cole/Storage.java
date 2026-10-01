@@ -5,6 +5,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 
 /**
  * Handles loading tasks from, and saving tasks to, a data file on disk.
@@ -92,7 +94,11 @@ public class Storage {
         if (type.equals("T")) {
             task = new ToDo(description);
         } else if (type.equals("D") && parts.length >= 4) {
-            task = new Deadline(description, parts[3]);
+            try {
+                task = new Deadline(description, LocalDate.parse(parts[3]));
+            } catch (DateTimeParseException e) {
+                return null;
+            }
         } else if (type.equals("E") && parts.length >= 5) {
             task = new Event(description, parts[3], parts[4]);
         }
