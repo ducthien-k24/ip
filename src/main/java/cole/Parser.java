@@ -13,6 +13,12 @@ public class Parser {
     private static final String COMMAND_EVENT = "event";
     private static final String COMMAND_FIND = "find";
 
+    /** Separator used between fields in the data file, so it must not appear in user input. */
+    private static final String SAVE_SEPARATOR = "|";
+
+    private static final String ERROR_UNKNOWN_COMMAND =
+            "OOPS!!! I have no idea what that command means, sorry!";
+
     private static final String ERROR_EVENT_TIME =
             "OOPS!!! Please specify the event time using /from and /to, e.g. \"event meeting /from Mon 2pm /to 4pm\".";
     private static final String ERROR_EVENT_DESCRIPTION =
@@ -58,9 +64,15 @@ public class Parser {
      *
      * @param input the full command typed by the user
      * @return the new task
-     * @throws ColeException if the description or time is missing or malformed
+     * @throws ColeException if the description or time is missing or malformed,
+     *     or the input contains the "|" character used by the data file
      */
     public static Task parseTask(String input) throws ColeException {
+        if (input.contains(SAVE_SEPARATOR)) {
+            throw new ColeException("OOPS!!! Sorry, I can't save the \"" + SAVE_SEPARATOR
+                    + "\" character. Please leave it out.");
+        }
+
         if (isCommand(input, COMMAND_TODO)) {
             return parseTodo(input);
         } else if (isCommand(input, COMMAND_DEADLINE)) {
@@ -68,7 +80,7 @@ public class Parser {
         } else if (isCommand(input, COMMAND_EVENT)) {
             return parseEvent(input);
         }
-        throw new ColeException("OOPS !!! I have no idea what that command means, sorry !");
+        throw new ColeException(ERROR_UNKNOWN_COMMAND);
     }
 
     /**
@@ -76,10 +88,23 @@ public class Parser {
      *
      * @param input the full command typed by the user
      * @return the 0-based index of the task
-     * @throws NumberFormatException if the task number is not an integer
+     * @throws NumberFormatException if the task number is missing or not an integer
      */
     public static int parseTaskIndex(String input) {
-        return Integer.parseInt(input.split(" ")[1]) - 1;
+        String[] words = input.trim().split("\\s+");
+        if (words.length < 2) {
+            throw new NumberFormatException("Missing task number");
+        }
+        return Integer.parseInt(words[1]) - 1;
+    }
+
+    /**
+     * Returns the message shown when the user types a command Cole does not know.
+     *
+     * @return the unknown command error message
+     */
+    public static String getUnknownCommandMessage() {
+        return ERROR_UNKNOWN_COMMAND;
     }
 
     /**
@@ -103,7 +128,7 @@ public class Parser {
         String[] deadlineParts = argumentsOf(input, COMMAND_DEADLINE).split(" /by ", 2);
         if (deadlineParts.length < 2) {
             throw new ColeException("OOPS!!! Please specify the deadline using /by, "
-                    + "e.g. \"deadline return book /by 2026-10-16\".");
+                    + "e.g. \"deadline return book /by 2019-10-15\".");
         }
 
         String description = deadlineParts[0].trim();
@@ -154,8 +179,12 @@ public class Parser {
     /**
      * Returns true if the input is exactly the command word or starts with it
      * followed by a space, so that "find" matches but "finder" does not.
+     *
+     * @param input the full command typed by the user
+     * @param command the command word to check for, e.g. "mark"
+     * @return whether the input is that command
      */
-    private static boolean isCommand(String input, String command) {
+    public static boolean isCommand(String input, String command) {
         return input.equals(command) || input.startsWith(command + " ");
     }
 

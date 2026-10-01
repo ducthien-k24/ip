@@ -43,7 +43,7 @@ public class Deadline extends Task {
      * @return one line of the data file
      */
     @Override
-    public String toSaveFormat(){
+    public String toSaveFormat() {
         return "D | " + super.toSaveFormat() + " | " + by;
     }
 

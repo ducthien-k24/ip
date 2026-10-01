@@ -61,6 +61,7 @@ _____________________________________________________________
 > - Command words are lowercase, e.g. type `todo`, not `Todo`. (`list` and `bye` also work in any case.)
 > - `INDEX` is the number shown next to the task in `list`, starting from 1.
 > - Each task is shown with two boxes: the task type (`[T]` todo, `[D]` deadline, `[E]` event) and its status (`[X]` done, `[ ]` not done).
+> - The `|` character cannot be used in any command, because Cole uses it when saving your tasks.
 
 ### Adding a todo: `todo`
 
@@ -73,7 +74,7 @@ Example: `todo read book`
 ```
 Got it. I've added this task:
  [T][ ] read book
-Now you have 1 tasks in the list.
+Now you have 1 task in the list.
 ```
 
 ### Adding a deadline: `deadline`

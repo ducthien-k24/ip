@@ -14,10 +14,15 @@ public class Ui {
 
     /**
      * Reads the next line of input typed by the user.
+     * If there is no more input (e.g. the user pressed Ctrl+D), returns "bye"
+     * so that Cole exits normally instead of crashing.
      *
-     * @return the raw command entered by the user
+     * @return the raw command entered by the user, or "bye" if the input has ended
      */
     public String readCommand() {
+        if (!scanner.hasNextLine()) {
+            return "bye";
+        }
         return scanner.nextLine();
     }
 
