@@ -12,4 +12,8 @@ delete abc
 delete 2
 blah
 list
+find book
+find BOOK
+find xyz
+find
 bye

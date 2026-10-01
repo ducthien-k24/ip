@@ -67,11 +67,26 @@ public class Ui {
      * @param tasks the tasks to display
      */
     public void showTaskList(ArrayList<Task> tasks) {
+        showNumberedTasks("Here are the tasks in your list:", tasks, "There is no task now!");
+    }
+
+    /**
+     * Prints the tasks that matched a find command, numbered from 1,
+     * or a notice if nothing matched.
+     *
+     * @param matchingTasks the tasks that contain the keyword
+     */
+    public void showMatchingTasks(ArrayList<Task> matchingTasks) {
+        showNumberedTasks("Here are the matching tasks in your list:", matchingTasks,
+                "No matching tasks found.");
+    }
+
+    private void showNumberedTasks(String header, ArrayList<Task> tasks, String emptyMessage) {
         System.out.println(DIVIDER);
-        System.out.println("Here are the tasks in your list:");
+        System.out.println(header);
 
         if (tasks.isEmpty()) {
-            System.out.println("There is no task now!");
+            System.out.println(emptyMessage);
         } else {
             for (int i = 0; i < tasks.size(); i++) {
                 System.out.println((i + 1) + ". " + tasks.get(i));
