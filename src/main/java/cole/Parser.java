@@ -1,5 +1,8 @@
 package cole;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+
 /**
  * Makes sense of the user's input: recognises commands and turns their
  * arguments into tasks or task numbers.
@@ -89,7 +92,7 @@ public class Parser {
         String[] deadlineParts = argumentsOf(input, COMMAND_DEADLINE).split(" /by ", 2);
         if (deadlineParts.length < 2) {
             throw new ColeException("OOPS!!! Please specify the deadline using /by, "
-                    + "e.g. \"deadline return book /by Sunday\".");
+                    + "e.g. \"deadline return book /by 2026-10-16\".");
         }
 
         String description = deadlineParts[0].trim();
@@ -98,7 +101,13 @@ public class Parser {
         requireNonEmpty(description, "OOPS!!! What's the deadline for? Please add a description.");
         requireNonEmpty(by, "OOPS!!! What's the time for the deadline? Please add a specific time.");
 
-        return new Deadline(description, by);
+        try {
+            LocalDate byDate = LocalDate.parse(by.trim());
+            return new Deadline(description, byDate);
+        } catch (DateTimeParseException e) {
+            throw new ColeException("OOPS!!! Please write the deadline date as yyyy-mm-dd, "
+                    + "e.g. \"deadline return book /by 2019-10-15\".");
+        }
     }
 
     private static Task parseEvent(String input) throws ColeException {
