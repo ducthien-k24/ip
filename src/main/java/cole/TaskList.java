@@ -24,6 +24,11 @@ public class TaskList {
         this.tasks = tasks;
     }
 
+    /**
+     * Adds a task to the end of the list.
+     *
+     * @param task the task to add
+     */
     public void add(Task task) {
         tasks.add(task);
     }
@@ -50,6 +55,11 @@ public class TaskList {
         return tasks.get(index);
     }
 
+    /**
+     * Returns the number of tasks in the list.
+     *
+     * @return how many tasks there are
+     */
     public int size() {
         return tasks.size();
     }

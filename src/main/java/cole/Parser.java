@@ -82,12 +82,23 @@ public class Parser {
         return Integer.parseInt(input.split(" ")[1]) - 1;
     }
 
+    /**
+     * Creates a todo from a command like "todo read book".
+     *
+     * @throws ColeException if the description is missing
+     */
     private static Task parseTodo(String input) throws ColeException {
         String description = argumentsOf(input, COMMAND_TODO).trim();
         requireNonEmpty(description, "OOPS!!! You forgot to tell me what the todo is about!");
         return new ToDo(description);
     }
 
+    /**
+     * Creates a deadline from a command like "deadline return book /by 2019-10-15".
+     *
+     * @throws ColeException if /by, the description or the date is missing,
+     *     or the date is not in yyyy-mm-dd format
+     */
     private static Task parseDeadline(String input) throws ColeException {
         String[] deadlineParts = argumentsOf(input, COMMAND_DEADLINE).split(" /by ", 2);
         if (deadlineParts.length < 2) {
@@ -110,6 +121,11 @@ public class Parser {
         }
     }
 
+    /**
+     * Creates an event from a command like "event meeting /from Mon 2pm /to 4pm".
+     *
+     * @throws ColeException if the description, /from or /to part is missing
+     */
     private static Task parseEvent(String input) throws ColeException {
         String content = argumentsOf(input, COMMAND_EVENT);
         requireNonEmpty(content, ERROR_EVENT_DESCRIPTION);
@@ -135,14 +151,24 @@ public class Parser {
         return new Event(description, from, to);
     }
 
+    /**
+     * Returns true if the input is exactly the command word or starts with it
+     * followed by a space, so that "find" matches but "finder" does not.
+     */
     private static boolean isCommand(String input, String command) {
         return input.equals(command) || input.startsWith(command + " ");
     }
 
+    /**
+     * Returns everything after the command word, or an empty string if there is nothing.
+     */
     private static String argumentsOf(String input, String command) {
         return input.length() > command.length() ? input.substring(command.length()) : "";
     }
 
+    /**
+     * Throws a ColeException with the given message if the value is empty or only spaces.
+     */
     private static void requireNonEmpty(String value, String errorMessage) throws ColeException {
         if (value.trim().isEmpty()) {
             throw new ColeException(errorMessage);
