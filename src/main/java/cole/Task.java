@@ -58,7 +58,7 @@ public class Task {
      *
      * @return the task description
      */
-    public String getDescription(){
+    public String getDescription() {
         return description;
     }
 
@@ -67,7 +67,7 @@ public class Task {
      *
      * @return true if the task is done
      */
-    public boolean isDone(){
+    public boolean isDone() {
         return isDone;
     }
 
@@ -78,7 +78,7 @@ public class Task {
      *
      * @return the common fields of this task in save format
      */
-    public String toSaveFormat(){
+    public String toSaveFormat() {
         return (isDone ? "1" : "0") + " | " + description;
     }
 }

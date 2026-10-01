@@ -38,18 +38,18 @@ public class Cole {
                 break;
             } else if (input.equalsIgnoreCase("list")) {
                 ui.showTaskList(tasks.getAll());
-            } else if (input.startsWith("mark ")) {
+            } else if (Parser.isCommand(input, "mark")) {
                 markTask(input, true);
-            } else if (input.startsWith("unmark ")) {
+            } else if (Parser.isCommand(input, "unmark")) {
                 markTask(input, false);
-            } else if (input.startsWith("delete ")) {
+            } else if (Parser.isCommand(input, "delete")) {
                 deleteTask(input);
             } else if (Parser.isFindCommand(input)) {
                 findTasks(input);
             } else if (Parser.isAddTaskCommand(input)) {
                 addTask(input);
             } else {
-                ui.showError("OOPS !!! I have no idea what that command means, sorry !");
+                ui.showError(Parser.getUnknownCommandMessage());
             }
         }
         ui.close();
@@ -105,7 +105,7 @@ public class Cole {
             storage.save(tasks.getAll());
             ui.showMessages("Noted. I've removed this task:",
                     " " + removedTask,
-                    "Now you have " + tasks.size() + " tasks in the list.");
+                    taskCountMessage());
         } catch (NumberFormatException e) {
             ui.showMessages(invalidTaskNumberMessage("delete"));
         } catch (IndexOutOfBoundsException e) {
@@ -126,7 +126,7 @@ public class Cole {
             storage.save(tasks.getAll());
             ui.showMessages("Got it. I've added this task:",
                     " " + newTask,
-                    "Now you have " + tasks.size() + " tasks in the list.");
+                    taskCountMessage());
         } catch (ColeException e) {
             ui.showError(e.getMessage());
         }
@@ -145,6 +145,14 @@ public class Cole {
         } catch (ColeException e) {
             ui.showError(e.getMessage());
         }
+    }
+
+    /**
+     * Returns a message with the number of tasks, using "task" or "tasks" as appropriate.
+     */
+    private String taskCountMessage() {
+        int count = tasks.size();
+        return "Now you have " + count + (count == 1 ? " task" : " tasks") + " in the list.";
     }
 
     private String invalidTaskNumberMessage(String command) {

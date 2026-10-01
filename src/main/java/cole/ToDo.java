@@ -30,7 +30,7 @@ public class ToDo extends Task {
      * @return one line of the data file
      */
     @Override
-    public String toSaveFormat(){
+    public String toSaveFormat() {
         return "T | " + super.toSaveFormat();
     }
 }

@@ -3,10 +3,10 @@ package cole;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Scanner;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 /**
  * Handles loading tasks from, and saving tasks to, a data file on disk.
