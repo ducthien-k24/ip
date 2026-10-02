@@ -31,7 +31,7 @@ public class Cole {
         ui.showWelcome();
 
         while (true) {
-            String input = ui.readCommand();
+            String input = ui.readCommand().trim();
 
             if (input.equalsIgnoreCase("bye")) {
                 ui.showMessages("Bye. Hope to see you again soon!");

@@ -1,6 +1,6 @@
-# Cole project template
+# Cole
 
-This is a project template for a greenfield Java project. It's named after the Java mascot _Duke_. Given below are instructions on how to use it.
+Cole is a command-line chatbot that keeps track of your todos, deadlines and events. See the [User Guide](https://ducthien-k24.github.io/ip/) for how to use it. Given below are instructions on how to set up the project.
 
 ## Setting up in Intellij
 
@@ -13,7 +13,7 @@ Prerequisites: JDK 25, update Intellij to the most recent version.
    1. If there are any further prompts, accept the defaults.
 1. Configure the project to use **JDK 25** (not other versions) as explained in [here](https://www.jetbrains.com/help/idea/sdk.html#set-up-jdk).<br>
    In the same dialog, set the **Project language level** field to the `SDK default` option.
-1. After that, locate the `src/main/java/Cole.java` file, right-click it, and choose `Run Cole.main()` (if the code editor is showing compile errors, try restarting the IDE). If the setup is correct, you should see something like the below as the output:
+1. After that, locate the `src/main/java/cole/Cole.java` file, right-click it, and choose `Run Cole.main()` (if the code editor is showing compile errors, try restarting the IDE). If the setup is correct, you should see something like the below as the output:
 ```
      ____      _      
     / ___|___ | | ___ 
